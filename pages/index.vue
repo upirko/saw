@@ -1,5 +1,5 @@
 <template>
-  <div class="map">
+  <div class="map" :class="{ ready: !!ymap }">
     <yandex-map
       v-if="isMounted"
       :coords="coords"
@@ -8,7 +8,16 @@
       :controls="[]"
       @click="onMapClick"
       @map-was-initialized="mapLoaded"
-    />
+    >
+      <ymap-marker
+        v-for="(o, index) in objects"
+        :key="index"
+        :coords="o.coords"
+        :marker-id="index"
+        :hint-content="o.name"
+        :icon="rillIcon"
+      />
+    </yandex-map>
   </div>
 </template>
 
@@ -24,10 +33,19 @@ export default {
       // maxZoom: 7,
     },
     areas: [],
+    objects: [],
+    rillIcon: {
+      layout: 'default#image',
+      imageHref: '/rill.png',
+      imageSize: [30, 38],
+      imageOffset: [-15, -19],
+    },
     isMounted: false,
+    ymap: null,
   }),
   async fetch() {
     this.areas = await this.$axios.$get('/areas.json')
+    this.objects = await this.$axios.$get('/objects.json')
   },
   fetchOnServer: false,
   // watch: {
@@ -43,6 +61,7 @@ export default {
       // console.log(e.get('coords'));
     },
     mapLoaded(map) {
+      this.ymap = map
       this.areas.forEach((a, index) => {
         const p = new window.ymaps.Polygon(
           [a.polygon],
@@ -70,7 +89,7 @@ export default {
       })
       map.geoObjects.events.add('click', (e) => {
         const target = e.get('target')
-        console.log(target.hint)
+        console.log(target)
       })
     },
   },
@@ -81,6 +100,9 @@ export default {
 .map {
   width: 100%;
   height: 100%;
+  &.ready {
+    background-color: white;
+  }
 }
 .ymap-container {
   height: 100%;
