@@ -6,17 +6,17 @@ const areas = [
   {
     name: 'Беломорский район',
     dumpsCount: 1,
-    pollutionLevel: 0,
+    pollutionLevel: 3,
   },
   {
     name: 'Калевальский район',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 2,
   },
   {
     name: 'Кемский район',
     dumpsCount: 3,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Кондопожский район',
@@ -26,27 +26,27 @@ const areas = [
   {
     name: 'Лахденпохский район',
     dumpsCount: 4,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Лоухский район',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 2,
   },
   {
     name: 'Медвежьегорский район',
     dumpsCount: 5,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Муезерский район',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 3,
   },
   {
     name: 'Олонецкий район',
     dumpsCount: 19,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Питкярантский район',
@@ -56,7 +56,7 @@ const areas = [
   {
     name: 'Прионежский район',
     dumpsCount: 6,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Пряжинский район',
@@ -76,17 +76,17 @@ const areas = [
   {
     name: 'Сортавальский район',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Суоярвский район',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 2,
   },
   {
     name: 'Петрозаводский городской округ',
     dumpsCount: 0,
-    pollutionLevel: 0,
+    pollutionLevel: 1,
   },
   {
     name: 'Костомукшский городской округ',
