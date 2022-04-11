@@ -29,7 +29,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-card-title>
-            <v-card-text v-html="item.content" />
+            <v-card-text v-if="item.content" v-html="item.content" />
           </v-card>
         </v-dialog>
       </template>
