@@ -18,19 +18,21 @@
     <v-main>
       <Nuxt />
     </v-main>
-    <template v-for="(item, i) in items">
-      <v-dialog :key="i" v-model="item.dialog" max-width="640">
-        <v-card>
-          <v-card-title class="text-h5">
-            {{ item.title }}
-            <v-spacer />
-            <v-btn icon @click="item.dialog = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text v-html="item.content" />
-        </v-card>
-      </v-dialog>
+    <template v-if="isMounted">
+      <template v-for="(item, i) in items">
+        <v-dialog :key="i" v-model="item.dialog" max-width="640">
+          <v-card>
+            <v-card-title class="text-h5">
+              {{ item.title }}
+              <v-spacer />
+              <v-btn icon @click="item.dialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text v-html="item.content" />
+          </v-card>
+        </v-dialog>
+      </template>
     </template>
   </v-app>
 </template>
@@ -42,6 +44,7 @@ import { marked } from 'marked'
 export default Vue.extend({
   name: 'DefaultLayout',
   data: () => ({
+    isMounted: false,
     items: [
       {
         title: 'Подать обращение',
@@ -65,6 +68,9 @@ export default Vue.extend({
     ],
     drawer: false,
   }),
+  mounted() {
+    this.isMounted = true
+  },
   methods: {
     openModal(item) {
       if (item.content) {
