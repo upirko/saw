@@ -10,7 +10,9 @@
     >
       <template v-for="(o, index) in objects">
         <ymap-marker
-          v-if="o.type === 'rill' && showRills || o.type === 'park' && showParks"
+          v-if="
+            (o.type === 'rill' && showRills) || (o.type === 'park' && showParks)
+          "
           :key="index"
           :coords="o.coords"
           :marker-id="index"
@@ -30,7 +32,11 @@
     <div v-if="!!ymap" class="legend">
       <h4>Состояние окружающей среды</h4>
       <div>
-        <div v-for="level in pollutionLevels" :key="level.color" :style="{'background-color': convertHex(level.color, 0.3)}">
+        <div
+          v-for="level in pollutionLevels"
+          :key="level.color"
+          :style="{ 'background-color': convertHex(level.color, 0.3) }"
+        >
           {{ level.title }}
         </div>
       </div>
@@ -74,7 +80,7 @@ export default {
     ymap: null,
     showRills: false,
     showParks: false,
-    pollutionLevels: POLLUTION_LEVELS
+    pollutionLevels: POLLUTION_LEVELS,
   }),
   async fetch() {
     this.areas = await this.$axios.$get('/areas.json')
@@ -111,7 +117,9 @@ export default {
                   Количество свалок: <strong>${a.dumpsCount}</strong>
                 </li>
                 <li>
-                  Состояние окружающей среды: <strong>${POLLUTION_LEVELS[a.pollutionLevel].title}</strong>
+                  Состояние окружающей среды: <strong>${
+                    POLLUTION_LEVELS[a.pollutionLevel].title
+                  }</strong>
                 </li>
               </ul>
             `,
@@ -134,7 +142,7 @@ export default {
       const g = parseInt(color.substring(3, 5), 16)
       const b = parseInt(color.substring(5, 7), 16)
       return `rgba(${r}, ${g}, ${b}, ${opacity ?? 1})`
-    }
+    },
   },
 }
 </script>
@@ -157,7 +165,7 @@ export default {
   right: 20px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.5);
-  z-index: 2;
+  max-width: calc(100vw - 40px);
 }
 .controls {
   top: 20px;
@@ -169,9 +177,14 @@ export default {
   & > div {
     display: flex;
     border: 1px solid #3a3f35;
+    max-width: 100%;
     & > * {
+      flex-shrink: 1;
+      flex-grow: 1;
       padding: 5px 10px;
       color: #3a3f35;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
