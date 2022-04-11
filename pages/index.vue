@@ -87,8 +87,14 @@ export default {
   methods: {
     objectBalloon(object) {
       let template = `<h3>${object.name}</h3>`
+      if (object.images?.length) {
+        template += `<div><img width="380" src="${object.images[0]}" /></div>`
+      }
       if (object.description?.length) {
         template += `<p>${object.description}</p>`
+      }
+      if (object.link?.length) {
+        template += `<a href="${object.link}" target="_blank">Сайт</a>`
       }
       return template
     },
