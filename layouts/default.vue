@@ -44,18 +44,20 @@ export default Vue.extend({
   data: () => ({
     items: [
       {
-        icon: 'mdi-apps',
         title: 'Подать обращение',
         dialog: false,
       },
       {
-        icon: 'mdi-chart-bubble',
         title: 'Полезные ссылки по экологии',
         dialog: false,
         contentUrl: '/info/links.md',
       },
       {
-        icon: 'mdi-chart-bubble',
+        title: 'Химический анализ воды',
+        dialog: false,
+        contentUrl: '/info/proba.md',
+      },
+      {
         title: 'Контактная информация',
         dialog: false,
         contentUrl: '/info/contacts.md',
