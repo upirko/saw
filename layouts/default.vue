@@ -2,7 +2,7 @@
   <v-app light>
     <v-navigation-drawer v-model="drawer" width="340" absolute bottom temporary>
       <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i">
+        <v-list-item v-for="(item, i) in navs" :key="i">
           <v-btn plain @click="openModal(item)">{{ item.title }}</v-btn>
         </v-list-item>
       </v-list>
@@ -18,8 +18,8 @@
     <v-main>
       <Nuxt />
     </v-main>
-    <template v-for="(item, i) in items">
-      <v-dialog :key="i" v-model="item.dialog" max-width="640">
+    <template v-for="(item, i) in navs">
+      <v-dialog v-if="item.target" :key="i" v-model="item.dialog" max-width="640">
         <v-card>
           <v-card-title class="text-h5">
             {{ item.title }}
@@ -28,7 +28,9 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
-          <v-card-text v-show="item.content" v-html="item.content"></v-card-text>
+          <v-card-text v-show="item.content">
+            <nuxt-content :document="item.content" />
+          </v-card-text>
         </v-card>
       </v-dialog>
     </template>
@@ -36,38 +38,20 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { marked } from 'marked'
-
-export default Vue.extend({
+export default {
   name: 'DefaultLayout',
   data: () => ({
-    items: [
-      {
-        title: 'Подать обращение',
-        dialog: false,
-      },
-      {
-        title: 'Полезные ссылки по экологии',
-        dialog: false,
-        contentUrl: '/info/links.md',
-        content: null,
-      },
-      {
-        title: 'Химический анализ воды',
-        dialog: false,
-        contentUrl: '/info/proba.md',
-        content: null,
-      },
-      {
-        title: 'Контактная информация',
-        dialog: false,
-        contentUrl: '/info/contacts.md',
-        content: null,
-      },
-    ],
+    navs: [],
     drawer: false,
   }),
+  async fetch () {
+    const pages = await this.$content('/nav').only(['title', 'path']).fetch()
+    this.navs.push(...pages.map(p => ({
+      title: p.title,
+      dialog: false,
+      target: p.path,
+    })))
+  },
   methods: {
     openModal(item) {
       if (item.content) {
@@ -75,17 +59,17 @@ export default Vue.extend({
         this.drawer = false
         return
       }
-      if (!item.contentUrl) {
+      if (!item.target) {
         this.drawer = false
         return
       }
-      this.$axios.get(item.contentUrl).then(({ data }) => {
-        item.content = marked.parse(data)
+      this.$content(item.target).fetch().then((data) => {
+        item.content = data
         this.openModal(item)
       })
     },
   },
-})
+}
 </script>
 
 <style lang="scss">
