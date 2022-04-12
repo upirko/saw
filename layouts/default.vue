@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" width="340" absolute bottom temporary>
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i">
-          <v-btn plain @click="openModal(item)" v-text="item.title" />
+          <v-btn plain @click="openModal(item)">{{ item.title }}</v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -18,21 +18,19 @@
     <v-main>
       <Nuxt />
     </v-main>
-    <template v-if="isMounted">
-      <template v-for="(item, i) in items">
-        <v-dialog :key="i" v-model="item.dialog" max-width="640">
-          <v-card>
-            <v-card-title class="text-h5">
-              {{ item.title }}
-              <v-spacer />
-              <v-btn icon @click="item.dialog = false">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-card-title>
-            <v-card-text v-if="item.content" v-html="item.content" />
-          </v-card>
-        </v-dialog>
-      </template>
+    <template v-for="(item, i) in items">
+      <v-dialog :key="i" v-model="item.dialog" max-width="640">
+        <v-card>
+          <v-card-title class="text-h5">
+            {{ item.title }}
+            <v-spacer />
+            <v-btn icon @click="item.dialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text v-show="item.content" v-html="item.content"></v-card-text>
+        </v-card>
+      </v-dialog>
     </template>
   </v-app>
 </template>
@@ -44,7 +42,6 @@ import { marked } from 'marked'
 export default Vue.extend({
   name: 'DefaultLayout',
   data: () => ({
-    isMounted: false,
     items: [
       {
         title: 'Подать обращение',
@@ -54,23 +51,23 @@ export default Vue.extend({
         title: 'Полезные ссылки по экологии',
         dialog: false,
         contentUrl: '/info/links.md',
+        content: null,
       },
       {
         title: 'Химический анализ воды',
         dialog: false,
         contentUrl: '/info/proba.md',
+        content: null,
       },
       {
         title: 'Контактная информация',
         dialog: false,
         contentUrl: '/info/contacts.md',
+        content: null,
       },
     ],
     drawer: false,
   }),
-  mounted() {
-    this.isMounted = true
-  },
   methods: {
     openModal(item) {
       if (item.content) {
