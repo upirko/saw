@@ -19,7 +19,7 @@
       <Nuxt />
     </v-main>
     <template v-for="(item, i) in navs">
-      <v-dialog v-if="item.target" :key="i" v-model="item.dialog" max-width="640">
+      <v-dialog :key="i" v-model="item.dialog" max-width="640">
         <v-card>
           <v-card-title class="text-h5">
             {{ item.title }}
@@ -28,8 +28,13 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
-          <v-card-text v-show="item.content">
-            <nuxt-content :document="item.content" />
+          <v-card-text>
+            <template v-if="item.content">
+              <nuxt-content :document="item.content" />
+            </template>
+            <template v-if="item.component">
+              <component :is="item.component" @sended="item.dialog = false" />
+            </template>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -41,32 +46,44 @@
 export default {
   name: 'DefaultLayout',
   data: () => ({
-    navs: [],
+    navs: [
+      {
+        title: 'Подать обращение',
+        dialog: false,
+        component: 'send-message',
+      },
+    ],
     drawer: false,
   }),
-  async fetch () {
+  async fetch() {
     const pages = await this.$content('/nav').only(['title', 'path']).fetch()
-    this.navs.push(...pages.map(p => ({
-      title: p.title,
-      dialog: false,
-      target: p.path,
-    })))
+    this.navs.push(
+      ...pages.map((p) => ({
+        title: p.title,
+        dialog: false,
+        target: p.path,
+      }))
+    )
   },
   methods: {
     openModal(item) {
-      if (item.content) {
+      if (item.content || item.component) {
         item.dialog = true
         this.drawer = false
         return
       }
-      if (!item.target) {
-        this.drawer = false
+
+      if (item.target) {
+        this.$content(item.target)
+          .fetch()
+          .then((data) => {
+            item.content = data
+            this.openModal(item)
+          })
         return
       }
-      this.$content(item.target).fetch().then((data) => {
-        item.content = data
-        this.openModal(item)
-      })
+
+      this.drawer = false
     },
   },
 }
